@@ -60,20 +60,20 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=-m32 -Wall
+CFLAGS+=-m32 -Wall
 
 # CC Compiler Flags
-CCFLAGS=-m32 -Wall
-CXXFLAGS=-m32 -Wall
+CCFLAGS+=-m32 -Wall
+CXXFLAGS+=-m32 -Wall
 
 # Fortran Compiler Flags
-FFLAGS=-Wall
+FFLAGS+=-Wall
 
 # Assembler Flags
-ASFLAGS=
+ASFLAGS+=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS+=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
