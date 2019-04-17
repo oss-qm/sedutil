@@ -21,6 +21,7 @@ along with sedutil.  If not, see <http://www.gnu.org/licenses/>.
 #include <linux/version.h>
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 4, 0)
 #include <linux/nvme_ioctl.h>
+#include "DtaDevLinuxNvmeStructsOpCodes.h"
 #else
 #include <linux/nvme.h>
 #endif
