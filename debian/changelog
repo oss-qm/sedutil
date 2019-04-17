@@ -1,3 +1,9 @@
+sedutil (1.15.1-1) unstable; urgency=low
+
+  * update to 1.15.1
+
+ -- Enrico Weigelt, metux IT consult <info@metux.net>  Wed, 17 Apr 2019 19:54:11 +0200
+
 sedutil (1.12-1) unstable; urgency=low
 
   * Initial release. Closes: #825864
