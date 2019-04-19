@@ -278,23 +278,10 @@ inline void Output2FILE::Output(const std::string& msg) {
     fflush(pStream);
 }
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-#if defined (BUILDING_FILELOG_DLL)
-#define FILELOG_DECLSPEC   __declspec (dllexport)
-#elif defined (USING_FILELOG_DLL)
-#define FILELOG_DECLSPEC   __declspec (dllimport)
-#else
-#define FILELOG_DECLSPEC
-#endif // BUILDING_DBSIMPLE_DLL
-#else
-#define FILELOG_DECLSPEC
-#endif // _WIN32
-
-class FILELOG_DECLSPEC CLog : public Log<Output2FILE> {
+class CLog : public Log<Output2FILE> {
 };
-//typedef Log<Output2FILE> FILELog;
 
-class FILELOG_DECLSPEC RCLog : public RLog<Output2FILE> {
+class RCLog : public RLog<Output2FILE> {
 };
 
 #ifndef CLOG_MAX_LEVEL
@@ -321,26 +308,6 @@ extern sedutiloutput outputFormat;
 	else RCLog().Get(level, outputFormat)
 #define	LOG LOGX
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-
-#include <windows.h>
-#include <cstdlib>
-
-inline std::string NowTime() {
-    const int MAX_LEN = 200;
-    char buffer[MAX_LEN];
-    if (GetTimeFormatA(LOCALE_USER_DEFAULT, 0, 0,
-            "HH':'mm':'ss", buffer, MAX_LEN) == 0)
-        return "Error in NowTime()";
-
-    char result[100] = {0};
-    static DWORD first = GetTickCount();
-    sprintf_s(result, 99, "%s.%03ld", buffer, (long) (GetTickCount() - first) % 1000);
-    return result;
-}
-
-#else
-
 #include <sys/time.h>
 
 inline std::string NowTime() {
@@ -355,7 +322,5 @@ inline std::string NowTime() {
     snprintf(result, 95, "%s.%03ld", buffer, (long) tv.tv_usec / 1000);
     return result;
 }
-
-#endif //WIN32
 
 #endif //__LOG_H__
