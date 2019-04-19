@@ -6,6 +6,8 @@ AC_INIT([sedutil], [1.15.1], [https://github.com/Drive-Trust-Alliance/sedutil/is
 AC_CONFIG_SRCDIR([Common/sedutil.cpp])
 AC_CONFIG_HEADERS([config.h])
 
+AM_INIT_AUTOMAKE
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
