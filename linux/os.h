@@ -30,6 +30,5 @@ along with sedutil.  If not, see <http://www.gnu.org/licenses/>.
 #define TRUE 1
 #define FALSE 0
 // a few OS specific methods that need to be worked out
-#define SNPRINTF snprintf
 #define DEVICEMASK snprintf(devname,23,"/dev/sd%c",(char) 0x61+i)
 #define DEVICEEXAMPLE "/dev/sdc"
