@@ -288,13 +288,6 @@ class RCLog : public RLog<Output2FILE> {
 #define CLOG_MAX_LEVEL D4
 #endif
 
-#if 0
-#define LOG(level) \
-	if (level > CLOG_MAX_LEVEL) ;\
-	else if (level > CLog::Level() || !Output2FILE::Stream()) ; \
-	else CLog().Get(level)
-#endif
-
 #define IFLOG(level) \
 	if (level > CLOG_MAX_LEVEL) ;\
 	else if (level > CLog::Level() || !Output2FILE::Stream()) ; \

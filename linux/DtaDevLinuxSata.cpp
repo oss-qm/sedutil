@@ -76,10 +76,6 @@ bool DtaDevLinuxSata::init(const char * devref)
         isOpen = FALSE;
         // This is a D1 because diskscan looks for open fail to end scan
         LOG(D1) << "Error opening device " << devref << " " << (int32_t) fd;
-        //        if (-EPERM == fd) {
-        //            LOG(E) << "You do not have permission to access the raw disk in write mode";
-        //            LOG(E) << "Perhaps you might try sudo to run as root";
-        //        }
     }
     else {
         isOpen = TRUE;
@@ -134,16 +130,12 @@ uint8_t DtaDevLinuxSata::sendCmd(ATACOMMAND cmd, uint8_t protocol, uint16_t comI
     //      cdb[5] = reserved;
     cdb[7] = ((comID & 0xff00) >> 8);
     cdb[6] = (comID & 0x00ff);
-    //      cdb[8] = 0x00;              // device
     cdb[9] = cmd; // IF_SEND/IF_RECV
-    //      cdb[10] = 0x00;              // reserved
-    //      cdb[11] = 0x00;              // control
     /*
      * Set up the SCSI Generic structure
      * see the SG HOWTO for the best info I could find
      */
     sg.interface_id = 'S';
-    //      sg.dxfer_direction = Set in if above
     sg.cmd_len = sizeof (cdb);
     sg.mx_sb_len = sizeof (sense);
     sg.iovec_count = 0;
@@ -155,10 +147,6 @@ uint8_t DtaDevLinuxSata::sendCmd(ATACOMMAND cmd, uint8_t protocol, uint16_t comI
     sg.flags = 0;
     sg.pack_id = 0;
     sg.usr_ptr = NULL;
-    //    LOG(D4) << "cdb before ";
-    //    IFLOG(D4) hexDump(cdb, sizeof (cdb));
-    //    LOG(D4) << "sg before ";
-    //    IFLOG(D4) hexDump(&sg, sizeof (sg));
     /*
      * Do the IO
      */
@@ -169,12 +157,6 @@ uint8_t DtaDevLinuxSata::sendCmd(ATACOMMAND cmd, uint8_t protocol, uint16_t comI
         IFLOG(D4) DtaHexDump(sense, sizeof (sense));
         return 0xff;
     }
-    //    LOG(D4) << "cdb after ";
-    //    IFLOG(D4) hexDump(cdb, sizeof (cdb));
-    //    LOG(D4) << "sg after ";
-    //    IFLOG(D4) hexDump(&sg, sizeof (sg));
-    //    LOG(D4) << "sense after ";
-    //    IFLOG(D4) hexDump(sense, sizeof (sense));
     if (!((0x00 == sense[0]) && (0x00 == sense[1])))
         if (!((0x72 == sense[0]) && (0x0b == sense[1]))) return 0xff; // not ATA response
     return (sense[11]);
@@ -214,14 +196,11 @@ void DtaDevLinuxSata::identify(OPAL_DiskInfo& disk_info)
    sg.dxfer_direction = SG_DXFER_FROM_DEV;
    cdb[4] = 1;
    cdb[9] = 0xec; // IF_SEND/IF_RECV
-    //      cdb[10] = 0x00;              // reserved
-    //      cdb[11] = 0x00;              // control
     /*
      * Set up the SCSI Generic structure
      * see the SG HOWTO for the best info I could find
      */
     sg.interface_id = 'S';
-    //      sg.dxfer_direction = Set in if above
     sg.cmd_len = sizeof (cdb);
     sg.mx_sb_len = sizeof (sense);
     sg.iovec_count = 0;
@@ -233,10 +212,6 @@ void DtaDevLinuxSata::identify(OPAL_DiskInfo& disk_info)
     sg.flags = 0;
     sg.pack_id = 0;
     sg.usr_ptr = NULL;
-    //    LOG(D4) << "cdb before ";
-    //    IFLOG(D4) hexDump(cdb, sizeof (cdb));
-    //    LOG(D4) << "sg before ";
-    //    IFLOG(D4) hexDump(&sg, sizeof (sg));
     /*
      * Do the IO
      */
@@ -249,12 +224,6 @@ void DtaDevLinuxSata::identify(OPAL_DiskInfo& disk_info)
         identify_SAS(&disk_info);
         return;
     }
-    //    LOG(D4) << "cdb after ";
-    //    IFLOG(D4) hexDump(cdb, sizeof (cdb));
-    //    LOG(D4) << "sg after ";
-    //    IFLOG(D4) hexDump(&sg, sizeof (sg));
-    //    LOG(D4) << "sense after ";
-    //    IFLOG(D4) hexDump(sense, sizeof (sense));
 
     ifstream kopts;
     kopts.open("/sys/module/libata/parameters/allow_tpm", ios::in);
@@ -274,11 +243,7 @@ void DtaDevLinuxSata::identify(OPAL_DiskInfo& disk_info)
         return;
     }
     IDENTIFY_RESPONSE * id = (IDENTIFY_RESPONSE *) buffer;
-//    disk_info->devType = id->devType;
     disk_info.devType = DEVICE_TYPE_ATA;
-//   memcpy(disk_info.serialNum, id->serialNum, sizeof (disk_info.serialNum));
-//   memcpy(disk_info.firmwareRev, id->firmwareRev, sizeof (disk_info.firmwareRev));
-//   memcpy(disk_info.modelNum, id->modelNum, sizeof (disk_info.modelNum));
 // looks like linux does the byte flipping for you
 for (unsigned int i = 0; i < sizeof (disk_info.serialNum); i += 2) {
     disk_info.serialNum[i] = id->serialNum[i + 1];
@@ -309,7 +274,6 @@ uint8_t DtaDevLinuxSata::sendCmd_SAS(ATACOMMAND cmd, uint8_t protocol, uint16_t 
     memset(&sense, 0, sizeof (sense));
     memset(&sg, 0, sizeof (sg));
 
-  
         // initialize SCSI CDB
         switch(cmd)
         {
@@ -376,7 +340,7 @@ uint8_t DtaDevLinuxSata::sendCmd_SAS(ATACOMMAND cmd, uint8_t protocol, uint16_t 
         // success
         return 0x00;
     }
-    
+
 static void safecopy(uint8_t * dst, size_t dstsize, uint8_t * src, size_t srcsize)
 {
     const size_t size = min(dstsize, srcsize);

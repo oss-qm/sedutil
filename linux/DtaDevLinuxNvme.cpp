@@ -102,10 +102,6 @@ uint8_t DtaDevLinuxNvme::sendCmd(ATACOMMAND cmd, uint8_t protocol, uint16_t comI
 	}
 	else
 		LOG(D3) << "NVME Security Command Success:" << nvme_cmd.result;
-	//LOG(D4) << "NVMe command:";
-	//IFLOG(D4) DtaHexDump(&nvme_cmd, sizeof(nvme_cmd));
-	//LOG(D4) << "NVMe buffer @ " << buffer;
-	//IFLOG(D4) DtaHexDump(buffer, bufferlen);
 	return err;
 }
 
